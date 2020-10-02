@@ -1,10 +1,5 @@
 
 
-```python
-import pandas as pd
-from complexity_functions import complexity, complexity_average
-```
-
 # Rationality implies generalization
 This is code accompanying the ICLR 2021 submission "For self-supervised learning, Rationality implies Generalization, provably"
 
@@ -44,6 +39,10 @@ We provide a theoretical bound for the Memorization gap in Theorem II. This boun
 
 ### Complexity measure $C^{dc}$
 
+```python
+from complexity_functions import complexity, complexity_average
+```
+
 
 ```python
 num_classes = 10
@@ -72,18 +71,6 @@ print(f'Bound based on Cpc is {bound_Cpc}')
 
 # RRM bound for CIFAR-10
 We now list the various quantities of interest for CIFAR-10
-
-
-```python
-cf10_table = pd.read_csv('cf10-rep.csv')
-```
-
-
-```python
-cf10_table.drop(labels='Unnamed: 0', axis=1).sort_values(by=['Data Augmentation', 'Method', 'Backbone'])
-```
-
-
 
 
 <div>
@@ -412,32 +399,8 @@ cf10_table.drop(labels='Unnamed: 0', axis=1).sort_values(by=['Data Augmentation'
 # RRM bound for ImageNet
 
 
-```python
-in_table = pd.read_csv('in-rep.csv')
-```
-
-
-```python
-in_table.drop(labels='Unnamed: 0', axis=1).sort_values(by=['Data Augmentation', 'Method', 'Backbone'])
-```
-
-
-
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
