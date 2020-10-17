@@ -26,6 +26,18 @@ except urllib.error.URLError as e:
         % e.reason
     )
 
+st.dataframe(df)
+
+### Select aug ####
+#augmentation = st.radio("Augmentation", df["Augmentation"])
+method_name = st.multiselect("Self-Supervised Method", df.Method.unique())#, default=df.Method.values)
+backbone = st.multiselect("Backbone Architecture", df.Backbone.unique())#, default=df.Backbone.values)
+aug = st.multiselect("Augmentation", df["Data Augmentation"].unique())#, default=df.Backbone.values)
+
+df = df[df["Method"].isin(method_name)]
+df = df[df["Backbone"].isin(backbone)]
+df = df[df["Data Augmentation"].isin(aug)]
+
 def hex_to_rgb(hex_color: str) -> tuple:
     hex_color = hex_color.lstrip("#")
     if len(hex_color) == 3:
@@ -87,6 +99,6 @@ fig.add_trace(go.Scatter(x=gen_gap.values, y=gen_gap.values, mode='lines', line=
 fig.update_layout(template='ggplot2', yaxis=dict(range=[-0.01,60], title="value"), xaxis=dict(title="Generalization Gap"),
                   font=dict(size=18))
 
-fig.show()
+#fig.show()
 
 st.plotly_chart(fig)
