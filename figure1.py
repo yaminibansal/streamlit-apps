@@ -8,9 +8,9 @@ import urllib
 @st.cache
 def cf_data(dataname):
     if dataname=='CIFAR10':
-        gen_gap_url = 'https://raw.githubusercontent.com/yaminibansal/tmp/main/cf10_repo.csv'
+        gen_gap_url = 'https://raw.githubusercontent.com/yaminibansal/streamlit-apps/main/cf10_repo.csv'
     elif dataname=='ImageNet':
-        gen_gap_url = 'https://raw.githubusercontent.com/yaminibansal/tmp/main/in_repo.csv'
+        gen_gap_url = 'https://raw.githubusercontent.com/yaminibansal/streamlit-apps/main/in_repo.csv'
     df = pd.read_csv(gen_gap_url)
     
     return df
@@ -118,7 +118,9 @@ fig.update_layout(template='ggplot2', yaxis=dict(range=[-0.01,60], title="value"
 
 #fig.show()
 
-st.markdown("## RRM Bound for Generalization Gap of Self-Supervised + Simple Algorithms")
+st.markdown("## For self-supervised learning, Rationality implies Generalization, provably")
+
+#st.markdown("### RRM Bound for Generalization Gap of Self-Supervised + Simple Algorithms")
 st.plotly_chart(fig)
 
 st.markdown("#### Raw Data (click on column header to sort)")
