@@ -6,15 +6,21 @@ import copy
 import urllib
 
 @st.cache
-def cf_data():
-    gen_gap_url = 'https://raw.githubusercontent.com/yaminibansal/tmp/main/cf10_repo.csv'
+def cf_data(dataname):
+    if dataname=='CIFAR10':
+        gen_gap_url = 'https://raw.githubusercontent.com/yaminibansal/tmp/main/cf10_repo.csv'
+    elif dataname=='ImageNet':
+        gen_gap_url = 'https://raw.githubusercontent.com/yaminibansal/tmp/main/in_repo.csv'
     df = pd.read_csv(gen_gap_url)
     
     return df
 
 
+dataname = st.sidebar.selectbox("Dataset", ["CIFAR10", "ImageNet"], 0)
+
+
 try:
-    df = cf_data()
+    df = cf_data(dataname)
     
 except urllib.error.URLError as e:
     st.error(
@@ -26,14 +32,12 @@ except urllib.error.URLError as e:
         % e.reason
     )
 
-st.dataframe(df)
-
 ### Select aug ####
 #augmentation = st.radio("Augmentation", df["Augmentation"])
-method_name = st.multiselect("Self-Supervised Method", list(df.Method.unique()), default=list(df.Method.unique()))#, default=df.Method.values)
-backbone = st.multiselect("Backbone Architecture", list(df.Backbone.unique()),
+method_name = st.sidebar.multiselect("Self-Supervised Method", list(df.Method.unique()), default=list(df.Method.unique()))#, default=df.Method.values)
+backbone = st.sidebar.multiselect("Backbone Architecture", list(df.Backbone.unique()),
                           default=list(df.Backbone.unique()))#, default=df.Backbone.values)
-aug = st.multiselect("Augmentation", options=list(df["Data Augmentation"].unique()),
+aug = st.sidebar.multiselect("Augmentation", options=list(df["Data Augmentation"].unique()),
                      default=list(df["Data Augmentation"].unique()))
 
 df = df[df["Method"].isin(method_name)]
@@ -66,6 +70,11 @@ gen_gap = df["Generalization Gap"]
 robustness = df["Robustness"]
 rationality = df["Rationality"]
 bound = np.minimum(robustness+rationality + df["Theorem II bound"], 100)
+method = df["Method"].values
+aug = df["Data Augmentation"].values
+backbone = df["Backbone"].values
+test = df["Test Performance"].values
+
 
 
 var_list = [(df["Memorization"], 'Memorization Gap', cred, cred_shade), 
@@ -81,7 +90,8 @@ for (current_var, name, clr, clr_shade) in var_list:
     var += current_var
     fig.add_trace(go.Scatter(x=gen_gap.values, y=var.values, fill='tonexty', mode='lines', fillcolor=clr_shade, line=dict(width=0., color=clr_shade), showlegend=False,))
 
-fig.add_trace(go.Scatter(x=gen_gap.values, y=bound.values, fill='tonexty', mode='lines+markers', 
+fig.add_trace(go.Scatter(x=gen_gap.values, y=bound.values, fill='tonexty', mode='lines+markers',
+                         text=[f'<br>Method={meth}<br>Backbone={bb}<br>Augmentation={a}<br>Test Acc={t:.2f}' for meth, bb, a, t in zip(method, backbone, aug, test)],                         
                          fillcolor=f"rgba{(*hex_to_rgb(cyellow), 0.1)}", marker=dict(size=5, color=cyellow), line=dict(width=0., color=clr_shade), name="Theorem II Bound"))
 
 var = np.zeros(len(memorization))
@@ -96,7 +106,9 @@ for (current_var, name, clr, clr_shade) in var_list:
 
 
 fig.add_trace(go.Scatter(x=gen_gap.values, y=var, mode='lines', line=dict(width=1.8, color=crrm, dash="solid"), name="Empirical RRM Bound"))
-fig.add_trace(go.Scatter(x=gen_gap.values, y=gen_gap.values, mode='lines', line=dict(width=1.8, color=cgrey, dash="dash"), name="Generalization Gap"))
+fig.add_trace(go.Scatter(x=gen_gap.values, y=gen_gap.values, mode='lines', line=dict(width=1.8, color=cgrey, dash="dash"),
+                         text=[f'<br>Method={meth}<br>Backbone={bb}<br>Augmentation={a}<br>Test Acc={t:.2f}' for meth, bb, a, t in zip(method, backbone, aug, test)],                         
+                         name="Generalization Gap"))
 
 fig.update_layout(template='ggplot2', yaxis=dict(range=[-0.01,60], title="value"), xaxis=dict(title="Generalization Gap"),
                   font=dict(size=14))
@@ -104,3 +116,6 @@ fig.update_layout(template='ggplot2', yaxis=dict(range=[-0.01,60], title="value"
 #fig.show()
 
 st.plotly_chart(fig)
+
+df = df.drop(["Unnamed: 0"], axis=1)
+st.dataframe(df)
