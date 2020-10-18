@@ -111,11 +111,16 @@ fig.add_trace(go.Scatter(x=gen_gap.values, y=gen_gap.values, mode='lines', line=
                          name="Generalization Gap"))
 
 fig.update_layout(template='ggplot2', yaxis=dict(range=[-0.01,60], title="value"), xaxis=dict(title="Generalization Gap"),
-                  font=dict(size=14))
+                  font=dict(size=14),
+                  legend=dict(
+                      x=0.02,
+                      y=0.99,))
 
 #fig.show()
 
+st.markdown("## RRM Bound for Generalization Gap of Self-Supervised + Simple Algorithms")
 st.plotly_chart(fig)
 
+st.markdown("#### Raw Data (click on column header to sort)")
 df = df.drop(["Unnamed: 0"], axis=1)
 st.dataframe(df)
