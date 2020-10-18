@@ -15,8 +15,10 @@ def cf_data(dataname):
     
     return df
 
+st.markdown("## For self-supervised learning, Rationality implies Generalization, provably")
 
-dataname = st.sidebar.selectbox("Dataset", ["CIFAR10", "ImageNet"], 0)
+
+dataname = st.selectbox("Dataset", ["CIFAR10", "ImageNet"], 0)
 
 
 try:
@@ -118,7 +120,7 @@ fig.update_layout(template='ggplot2', yaxis=dict(range=[-0.01,60], title="value"
 
 #fig.show()
 
-st.markdown("## For self-supervised learning, Rationality implies Generalization, provably")
+
 
 #st.markdown("### RRM Bound for Generalization Gap of Self-Supervised + Simple Algorithms")
 st.plotly_chart(fig)
