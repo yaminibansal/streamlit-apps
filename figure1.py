@@ -15,8 +15,9 @@ def cf_data(dataname):
     
     return df
 
-st.markdown("## For self-supervised learning, Rationality implies Generalization, provably")
-
+st.markdown("## [For self-supervised learning, Rationality implies Generalization, provably](https://arxiv.org/abs/2010.08508)")
+st.markdown("### [Yamini Bansal*](https://yaminibansal.com/about/), [Gal Kaplun*](https://www.galkaplun.com/), [Boaz Barak](https://www.boazbarak.org/)")
+st.markdown("We show that the generalization gap of classifiers obtained by first using self-supervision to learn a representation of the training data, and then fitting a simple (e.g., linear) classifier to the labels is small, and we can provide non-vacuous bounds for it")
 
 dataname = st.selectbox("Dataset", ["CIFAR10", "ImageNet"], 0)
 
